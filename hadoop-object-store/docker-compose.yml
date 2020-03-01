@@ -5,9 +5,7 @@ services:
     image: loum/hadoop-pseudo:a97ab40
     container_name: hadoop-pseudo
     environment:
-      S3A_ENDPOINT: http://minio:900
-      MINIO_ACCESS_KEY: 05Y2TVZ3T1RQNH7TI89Q
-      MINIO_SECRET_KEY: 8P2AajiFu+CHo2+3M2pUgWBhtVLaYUXBqBjGZ3wP
+      OBJECT_STORE_ENDPOINT: "http://minio:9000"
 
   # More at https://docs.min.io/docs/minio-docker-quickstart-guide.html
   minio:

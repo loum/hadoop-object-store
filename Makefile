@@ -31,12 +31,11 @@ local-build-down:
 
 MINIO_CONTAINER_NAME := minio
 login-minio:
-	@$(DOCKER) exec -ti $(MINIO_CONTAINER_NAME)
+	@$(DOCKER) exec -ti $(MINIO_CONTAINER_NAME) || true
 
 HADOOP_CONTAINER_NAME = hadoop-pseudo
 login-hadoop:
-	$(info $(DOCKER) exec -ti hadoop-pseudo su - hdfs)
-	@$(DOCKER) exec -ti hadoop-pseudo su - hdfs
+	@$(DOCKER) exec -ti $(HADOOP_CONTAINER_NAME) su - hdfs || true
 
 help: base-help python-venv-help
 	@echo "(Makefile)\n\
