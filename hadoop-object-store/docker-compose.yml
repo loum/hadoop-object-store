@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  hadoop-pseudo:
+    image: loum/hadoop-pseudo:a97ab40
+    container_name: hadoop-pseudo
+    environment:
+      S3A_ENDPOINT: http://minio:900
+      MINIO_ACCESS_KEY: 05Y2TVZ3T1RQNH7TI89Q
+      MINIO_SECRET_KEY: 8P2AajiFu+CHo2+3M2pUgWBhtVLaYUXBqBjGZ3wP
+
+  # More at https://docs.min.io/docs/minio-docker-quickstart-guide.html
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ACCESS_KEY: 05Y2TVZ3T1RQNH7TI89Q
+      MINIO_SECRET_KEY: 8P2AajiFu+CHo2+3M2pUgWBhtVLaYUXBqBjGZ3wP
+    ports:
+      - 9000:9000
+    entrypoint: sh
+    command: -c 'mkdir -p /export/sample-sink-bucket && /usr/bin/minio server /export'
