@@ -35,17 +35,26 @@ login-minio:
 
 HADOOP_CONTAINER_NAME = hadoop-pseudo
 login-hadoop:
-	@$(DOCKER) exec -ti $(HADOOP_CONTAINER_NAME) su - hdfs || true
+	@$(DOCKER) exec -ti $(HADOOP_CONTAINER_NAME) bash || true
+
+conf-key:
+	@$(DOCKER) exec $(HADOOP_CONTAINER_NAME) /opt/hadoop/bin/hdfs getconf -confKey $(CONF_KEY) 
+
+hadoop-cmd:
+	@$(DOCKER) exec $(HADOOP_CONTAINER_NAME) /opt/hadoop/bin/hadoop fs $(HADOOP_CMD)
 
 help: base-help python-venv-help
 	@echo "(Makefile)\n\
   init                 Build the local virtual environment\n\
-  local-build-up:      Create a local Kafka Connect pipeline that streams data to an S3-like store (MINIO)\n\
-  local-build-down:    Destroy local Kafka Connect pipeline\n\
-  local-build-config:  Local Kafka Connect pipeline docker-compose config\n\
-  local-rmi:           Remove local Kafka Connect docker image\n\
+  local-build-up:      Create local data lake over an S3-like store (MINIO)\n\
+  local-build-down:    Destroy local data lake\n\
+  local-build-config:  Local data lake\n\
   login-minio:         Login to container $(MINIO_CONTAINER_NAME)\n\
   login-hadoop:        Login to container $(HADOOP_CONTAINER_NAME) as user \"hdfs\"\n\
+  conf-key:            Display configuration key defined by CONF_KEY\n\
+                       - Example: make confkey CONF_KEY=fs.s3a.endpoint\n\
+  hadoop-cmd:          Run hadoop CLI command defined by HADOOP_CMD\n\
+                       - Example: make hadoop-cmd HADOOP_CMD="-ls s3a://hive"\n\
 	";
 
 
