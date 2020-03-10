@@ -37,6 +37,7 @@ coverage.xml
 .pydevproject
 
 # Local virtual environment
+.env
 venv
 2env
 3env
@@ -64,11 +65,9 @@ test.env
 derby.log
 metastore_db
 
-# CNP
-.data-kafka-connect/*.processed
-
-# Kafka Connect dynamically created connector configs
-*s3.properties.json
+# Temporary integration test file directories
+cmsearchdiffer/tests/files/es/
+cmsearchdiffer/tests/files/ods/
 
 # Zeppelin logs
-docker/zeppelin-hive/logs/zeppelin--*.log
+logs

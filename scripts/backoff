@@ -1,0 +1,50 @@
+import sys
+import telnetlib
+import argparse
+import logging
+import backoff
+
+ROOT = logging.getLogger()
+ROOT.setLevel(logging.INFO)
+
+HANDLER = logging.StreamHandler(sys.stdout)
+HANDLER.setLevel(logging.INFO)
+FORMATTER = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s: %(message)s')
+HANDLER.setFormatter(FORMATTER)
+ROOT.addHandler(HANDLER)
+
+
+DESCRIPTION = """Backoff until all ports ready"""
+
+def main():
+    """Script entry point.
+    """
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
+    parser.add_argument('-p', '--port',
+                        action='append',
+                        help='Backoff port number until ready',
+                        required=True)
+    parser.add_argument('host',
+                        nargs=1,
+                        help='Connection host')
+
+    args = parser.parse_args()
+
+    _backoff(args.host[0], args.port[0])
+
+
+@backoff.on_exception(backoff.expo, (EOFError, ConnectionRefusedError), max_time=300)
+def _backoff(host, port):
+    """Hiveserver2 backoff until ready.
+
+    """
+    logging.info(f'Checking host:port {host}:{port} is ready ...')
+
+    with telnetlib.Telnet(host, int(port)) as tn:
+        tn.set_debuglevel(5)
+        tn.read_until(b' ', 1)
+        logging.info(f'Port {port} ready')
+
+
+if __name__ == "__main__":
+    main()
